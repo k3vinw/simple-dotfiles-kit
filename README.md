@@ -51,3 +51,8 @@ dotfiles clone [GIT-REMOTE] [DEVICE_NAME]
 e.g.
 dotfiles clone git@gitlab.cas.org:kxw29/dotfiles.git kxw29-desktop.formulations.cloud.cas.org
 ```
+
+## Credits
+
+Inspired by a combination of [vcsh](https://github.com/RichiH/vcsh) and this elegant
+[approach](https://www.atlassian.com/git/tutorials/dotfiles).
