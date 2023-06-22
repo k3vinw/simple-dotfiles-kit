@@ -1,6 +1,6 @@
 # Dotfiles
 
-simple dotfiles management
+simple dotfiles kit
 
 ## Install
 
@@ -19,26 +19,14 @@ Recommended steps:
 
 ## Synchronizing Across Multiple Devices
 
-This setup uses branches to manage device specific dot files.
+This setup relies on branches to manage device specific dot files.
 
-Here's a simple merging strategy that preserves files only existing
-in the branch for your device while pulling in the latest changes
-from the main branch:
-
-```
-dotfiles checkout BRANCH_NAME
-dotfiles checkout -b temp
-dotfiles merge master
-dotfiles checkout -
-dotfiles merge temp
-dotfiles branch -D temp
-```
-
-For simple changes, you can use cherry pick to merge changes from
-one branch into another:
+A simple approach is to have a main branch with common files shared
+across devices:
 
 ```
-dotfiles cherry-pick ...
+dotfiles checkout DEVICE_BRANCH
+dotfiles merge MAIN_BRANCH
 ```
 
 ## Restore
