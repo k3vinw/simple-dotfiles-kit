@@ -1,0 +1,102 @@
+#!/bin/bash -e
+#
+# inspired by [vcsh](https://github.com/RichiH/vcsh)
+#
+
+DEVICE_NAME="$(hostname -f)"
+DOTFILES_BRANCH_NAME="$DEVICE_NAME"
+DOTFILES_BASE="$HOME"
+DOTFILES_REPO="$HOME/.dotfiles"
+GIT_DIR="${DOTFILES_REPO}/dotfiles.git"
+export GIT_DIR
+
+function init() {
+    if [[ -f "${GIT_DIR}/config" ]]; then
+        echo "dotfiles repo already initialized."
+        exit 1
+    fi
+    cd "$DOTFILES_BASE"
+    git init --shared=false
+    git config core.worktree "$DOTFILES_BASE"
+    git config status.showUntrackedFiles no
+    git config core.bare false
+}
+
+function clone() {
+    GIT_REMOTE="$1"
+    DOTFILES_BRANCH="${2:-$DEVICE_NAME}"
+    git ls-remote "$GIT_REMOTE"
+    init
+    # Test which, if any, given or detected branches can be pulled from.
+    # In a future version, if we need the logic, we could do the following:
+    #   git ls-remote ORIGIN
+    #   get HEAD commit ID
+    #   see what refs/heads/* match that commit ID
+    #   set VCSH_BRANCH if only one match
+    #   offer a list of all matching refs for the user to choose
+    for DOTFILES_BRANCH_TEST in "$DOTFILES_BRANCH" main master development; do
+	if [ $(git ls-remote "$GIT_REMOTE" "$DOTFILES_BRANCH_TEST" 2> /dev/null | wc -l ) -lt 1 ]; then
+	    echo "remote branch '$DOTFILES_BRANCH_TEST' empty"
+	else
+	    echo "remote branch '$DOTFILES_BRANCH_TEST' found"
+	    DOTFILES_REMOTE_BRANCH=$DOTFILES_BRANCH_TEST
+	    break
+	fi
+    done
+    if [ -z "$DOTFILES_REMOTE_BRANCH" ]; then
+	echo "No non-empty remote branches found, aborting. Please determine the correct branch, and try again."
+	exit 1
+    fi
+    DOTFILES_BRANCH=$DOTFILES_REMOTE_BRANCH
+
+    # setup remote 
+    git remote add origin "$GIT_REMOTE"
+    git checkout -b "$DOTFILES_BRANCH" || return $?
+    git config "branch.${DOTFILES_BRANCH}.remote" origin
+    git config "branch.${DOTFILES_BRANCH}.merge" "refs/heads/${DOTFILES_BRANCH}"
+    GIT_VERSION_MAJOR=$(git --version | sed -E -n 's/.* ([0-9]+)\..*/\1/p' )
+    if [ 1 -lt "$GIT_VERSION_MAJOR" ];then
+	git fetch origin "$DOTFILES_BRANCH"
+    else
+	git fetch origin
+    fi
+    git -c merge.ff=true merge "origin/${DOTFILES_BRANCH}"
+}
+
+function dotfiles() {
+    git --git-dir="$GIT_DIR" --work-tree="$DOTFILES_BASE" $@
+}
+
+function ls_fancy() {
+    for i in $(dotfiles ls-files); do
+      echo -n "$(dotfiles -c color.status=always status $i -s | sed "s#$i##")"
+      echo -e "	/$i	\e[0;33m$(dotfiles -c color.ui=always log -1 --format="%s" -- $i)\e[0m"
+    done
+}
+
+function usage() {
+cat <<-EOF
+$(basename $0) [COMMAND]
+
+COMMANDS:
+    h|help        		        show help
+    i|init       	                init dotfiles repo
+    c|clone REMOTE [DEVICE_NAME]	clone dotfiles repo
+    l|lsd|ls-dotfiles			list dot files
+    run [GIT COMMAND]                   run any git command in dotfiles context
+    [GIT COMMAND]                       shortcut to run git commands in dotfiles context
+    
+    e.g. dotfiles add, dotfiles commit, dotfiles push, dotfiles run ls-files
+EOF
+}
+
+case "$1" in
+    -h|--help|h|help)       	usage;;
+    i|in|init)                 	shift; init "$1";;
+    c|cl|clone)               	shift; clone "$1" "$2";;
+    l|lsd|ls-dotfiles)	        shift; ls_fancy;;
+    run)                     	shift; dotfiles $@;;
+    *)                      	dotfiles $@;;
+esac
+
+exit $?

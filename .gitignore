@@ -1,0 +1,7 @@
+.dotfiles/*.git
+.vim/.netrwhist
+.viminfo
+cache
+cache*
+Cache
+Cache*
