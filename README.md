@@ -8,14 +8,15 @@ Recommended steps:
 
 1. copy ~/.dotfiles/bin/dotfiles to ~/.local/bin
 2. update your shell's PATH to include ~/.local/bin
+3. add `.dotfiles/*.git` to your `$HOME/.gitignore`
 
 ## Setup
 
 1. initialize your dotfiles repo: `dotfiles init`
 2. setup remote: `dotfiles remote add origin git://example`
 3. add your dot files: `dotfiles add .foo .bar`
-4. commit: `dotfiles commit`
-5. push: `dotfiles push`
+4. commit changes: `dotfiles commit`
+5. push changes: `dotfiles push`
 
 ## Synchronizing Across Multiple Devices
 
