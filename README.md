@@ -4,11 +4,18 @@ simple dotfiles kit
 
 ## Install
 
-Recommended steps:
+There's two different approaches you can take.
 
-1. copy ~/.dotfiles/bin/dotfiles to ~/.local/bin
-2. update your shell's PATH to include ~/.local/bin
-3. add `.dotfiles/*.git` to your `$HOME/.gitignore`
+1. Install this repository as a template.
+2. Use this repository as a reference and handle the installation in
+   a more manual fashion.
+
+Recommended steps to install as a template:
+
+1. clone this repository
+2. copy all the files and directories into your $HOME directory
+3. copy ~/.dotfiles/bin/dotfiles to ~/.local/bin
+4. update your shell's PATH to include ~/.local/bin
 
 ## Setup
 
