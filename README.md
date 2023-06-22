@@ -26,7 +26,7 @@ in the branch for your device while pulling in the latest changes
 from the main branch:
 
 ```
-dotfiles checkout DEVICE_NAME
+dotfiles checkout BRANCH_NAME
 dotfiles checkout -b temp
 dotfiles merge master
 dotfiles checkout -
@@ -47,9 +47,9 @@ To restore a dotfiles repo from scratch:
 
 ```
 mkdir ~/.dotfiles/ # only necessary when not starting from this template
-dotfiles clone [GIT-REMOTE] [DEVICE_NAME]
+dotfiles clone GIT-REMOTE [BRANCH_NAME]
 e.g.
-dotfiles clone git@gitlab.cas.org:kxw29/dotfiles.git kxw29-desktop.formulations.cloud.cas.org
+dotfiles clone git@gitlab.com:kevinrw/dotfiles.git zenbook
 ```
 
 ## Credits

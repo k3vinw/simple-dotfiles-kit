@@ -3,8 +3,6 @@
 # inspired by [vcsh](https://github.com/RichiH/vcsh)
 #
 
-DEVICE_NAME="$(hostname -f)"
-DOTFILES_BRANCH_NAME="$DEVICE_NAME"
 DOTFILES_BASE="$HOME"
 DOTFILES_REPO="$HOME/.dotfiles"
 GIT_DIR="${DOTFILES_REPO}/dotfiles.git"
@@ -24,7 +22,7 @@ function init() {
 
 function clone() {
     GIT_REMOTE="$1"
-    DOTFILES_BRANCH="${2:-$DEVICE_NAME}"
+    DOTFILES_BRANCH="$2"
     git ls-remote "$GIT_REMOTE"
     init
     # Test which, if any, given or detected branches can be pulled from.
@@ -81,7 +79,7 @@ $(basename $0) [COMMAND]
 COMMANDS:
     h|help        		        show help
     i|init       	                init dotfiles repo
-    c|clone REMOTE [DEVICE_NAME]	clone dotfiles repo
+    c|clone REMOTE [BRANCH_NAME]	clone dotfiles repo
     l|lsd|ls-dotfiles			list dot files
     run [GIT COMMAND]                   run any git command in dotfiles context
     [GIT COMMAND]                       shortcut to run git commands in dotfiles context
