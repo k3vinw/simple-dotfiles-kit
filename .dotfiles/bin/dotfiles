@@ -14,10 +14,9 @@ function init() {
         exit 1
     fi
     cd "$DOTFILES_BASE"
-    git init --shared=false
+    git init --bare --shared=false
     git config core.worktree "$DOTFILES_BASE"
     git config status.showUntrackedFiles no
-    git config core.bare false
 }
 
 function clone() {
