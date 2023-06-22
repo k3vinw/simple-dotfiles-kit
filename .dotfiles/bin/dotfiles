@@ -65,9 +65,15 @@ function dotfiles() {
 }
 
 function ls_fancy() {
+    local max_width=50
+    # cowardly hide error detecting terminal width and fallback to default
+    local auto_width="$(tput cols 2> /dev/null)"
     for i in $(dotfiles ls-files); do
-      echo -n "$(dotfiles -c color.status=always status $i -s | sed "s#$i##")"
-      echo -e "	/$i	\e[0;33m$(dotfiles -c color.ui=always log -1 --format="%s" -- $i)\e[0m"
+      if [[ "$auto_width" -gt 1 ]]; then
+          max_width=$(expr $auto_width - ${#i} - 20) # leave 20 to pad for status column
+      fi
+      echo -n $(dotfiles -c color.status=always status $i -s | sed "s#$i##")
+      echo -e "	/$i	\e[0;33m$(dotfiles -c color.ui=always log -1 --format="%<($max_width,trunc)%s" -- $i)\e[0m"
     done
 }
 
