@@ -2,9 +2,9 @@
 
 simple dotfiles kit
 
-Simple dot file management using only git and a small wrapper
-shell script. No symlinking. Explicit tracking. All packaged into
-distributable kit that can be easily deployed to just about any device.
+Simple dot file management. No symlinking. Explicit tracking. Packaged
+into a distributable kit that can be easily deployed to just about
+any device.
 
 ## Requirements
 
